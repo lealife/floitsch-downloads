@@ -1,0 +1,19 @@
+Index: src/objects.cc
+===================================================================
+--- src/objects.cc	(revision 10353)
++++ src/objects.cc	(working copy)
+@@ -1612,6 +1612,14 @@
+   if (allow_map_transition) {
+     // Allocate new instance descriptors for the old map with map transition.
+     MapTransitionDescriptor d(name, Map::cast(new_map), attributes);
++
++    if (FLAG_print_code) {
++      SmartArrayPointer<char> c_string = name->ToCString();
++      PrintF("Map Transition: %p + %s -> %p\n",
++             static_cast<void*>(map()),
++             *c_string,
++             static_cast<void*>(new_map));
++    }
+     Object* r;
+     { MaybeObject* maybe_r = old_descriptors->CopyInsert(&d, KEEP_TRANSITIONS);
+       if (!maybe_r->ToObject(&r)) return maybe_r;
